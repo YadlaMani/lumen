@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -18,9 +19,16 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("./db");
 const db_2 = require("./db");
 const middleware_1 = require("./middleware");
+require("dotenv/config");
 const app = (0, express_1.default)();
+if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI is not defined in the environment variables.");
+}
+if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in the environment variables.");
+}
 mongoose_1.default
-    .connect("mongodb+srv://mani:ymn336699@cluster0.bb7kjwa.mongodb.net/lumen")
+    .connect((_a = process.env) === null || _a === void 0 ? void 0 : _a.MONGO_URI)
     .then(() => {
     console.log("Connected to MongoDB");
 })
@@ -50,7 +58,7 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
     if (user) {
         const token = jsonwebtoken_1.default.sign({
             id: user._id,
-        }, "secret");
+        }, process.env.JWT_SECRET);
         res.json({
             message: "user signed in",
             token,
