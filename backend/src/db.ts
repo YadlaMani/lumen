@@ -12,5 +12,11 @@ const ContentSchema = new Schema({
   tags: [{ type: Types.ObjectId, ref: "tags" }],
   userId: { type: Types.ObjectId, ref: "users", required: true },
 });
+const BrainScehma = new Schema({
+  userId: { type: Types.ObjectId, ref: "users", required: true },
+  brain: [{ type: Types.ObjectId, ref: "content" }],
+  share: { type: Boolean, default: false },
+});
 export const UserModel = model("users", UserSchema);
 export const ContentModel = model("content", ContentSchema);
+export const BrainModel = model("brain", BrainScehma);
